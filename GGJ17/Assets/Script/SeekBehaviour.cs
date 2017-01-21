@@ -6,40 +6,29 @@ using UnityEngine;
 public class SeekBehaviour : Steering {
 
     public MyPhysics target;
+
     public float maxAcc;
-    public float maxSpeed;
-    private float targetSpeed;
-
-    public float targetRadius;
-    public float slowRadius;
-
-    public float timeToTarget;
+    public float radius;
 
     public override SteeringOutput getSteering()
     {
         SteeringOutput steering = new SteeringOutput();
-        Vector3 dir = target.pos - my.pos;
 
-        float dist = dir.magnitude;
+        Vector3 des = target.pos - my.pos;
+        float d = des.magnitude;
+        des.Normalize();
 
-        if (dist < targetRadius)
-            return steering;
-
-        if (dist > slowRadius)
-            targetSpeed = maxSpeed;
-        else
-            targetSpeed = maxSpeed * dist / slowRadius;
-
-        Vector3 targetVel = dir.normalized * targetSpeed;
-
-        steering.linear = (targetVel - my.vel) / timeToTarget;
-
-
-        if (steering.linear.magnitude > maxAcc)
+        if(d < radius)
         {
-            steering.linear.Normalize();
-            steering.linear *= maxAcc;
+            des *= d * my.maxVel / radius * 0.5f;
         }
+        else
+        {
+            des *= my.maxVel;
+        }
+
+        steering.linear = des - my.vel;
+        steering.linear = Vector3.ClampMagnitude(steering.linear, maxAcc);
 
         return steering;
     }

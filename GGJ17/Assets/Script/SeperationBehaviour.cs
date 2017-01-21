@@ -7,9 +7,6 @@ public class SeperationBehaviour : Steering
 {
     private List<MyPhysics> targets;
 
-    public float threshold;
-    public float decayCoefficient;
-
     public float maxAcc;
     public float radius;
 
@@ -20,31 +17,30 @@ public class SeperationBehaviour : Steering
 
     public override SteeringOutput getSteering()
     {
+        // Detect nearby creatures
         targets.Clear();
 
         Collider[] colls = Physics.OverlapSphere(my.pos, radius);
 
         foreach (Collider col in colls)
         {
-            if (col.gameObject.GetComponent<SeperationBehaviour>() != null)
-                targets.Add(col.gameObject.GetComponent<MyPhysics>());
+            SeperationBehaviour other = col.gameObject.GetComponent<SeperationBehaviour>();
+            if (other != null && other != this)
+                targets.Add(other.gameObject.GetComponent<MyPhysics>());
         }
 
-SteeringOutput steering = new SteeringOutput();
+        SteeringOutput steering = new SteeringOutput();
 
         foreach (MyPhysics target in targets)
         {
-            Vector3 dir = my.pos - target.pos;
-            float dist = dir.magnitude;
-
-            if(dist < threshold)
-            {
-                float strength = Math.Min(decayCoefficient / (dist * dist), maxAcc);
-
-                dir.Normalize();
-                steering.linear += strength * dir;
-            }
+            Vector3 diff = my.pos - target.pos;
+            steering.linear += diff.normalized;
         }
+
+        if (targets.Count > 0)
+            steering.linear /= targets.Count;
+
+        steering.linear = steering.linear.normalized * my.maxVel;
 
         return steering;
     }
