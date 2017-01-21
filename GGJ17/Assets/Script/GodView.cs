@@ -7,33 +7,32 @@ public class GodView : MonoBehaviour {
     Camera myCam;
     [SerializeField]
     private GameObject constructionPrefab;
+    WorldScript w;
 
     public void enableConstructionMode(GameObject prefab)
     {
-        WorldScript w = FindObjectOfType<WorldScript>();
+        constructionPrefab = prefab;
         AbstractBuildingBlock a = prefab.GetComponent<AbstractBuildingBlock>();
-        if (a)
+        if (a is Building_Wall)
         {
-            if (a is Building_Wall)
-            {
-                w.flag.ShowNodes(true, true);
-            }
-            else if (a is Building_Extractor)
-            {
-                w.flag.ShowNodes(true, false);
-            }
-            else if (a is Building_Barracks)
-            {
-                w.flag.ShowNodes(true, false);
-            }
+            w.flag.ShowNodes(true, true);
         }
-        
+        else if (a is Building_Extractor)
+        {
+            w.flag.ShowNodes(true, false);
+        }
+        else if (a is Building_Barracks)
+        {
+            w.flag.ShowNodes(true, false);
+        }
+        w.ShowBuildNodes();
     }
 
 	// Use this for initialization
 	void Start () {
         myCam = GetComponent<Camera>();
-	}
+        w = FindObjectOfType<WorldScript>();
+    }
 
     // Update is called once per frame
     void Update()

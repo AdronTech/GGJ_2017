@@ -9,11 +9,16 @@ public class WorldScript : MonoBehaviour {
     public AbstractBuildingBlock[,] blocks;
 
     public GameObject flagPrefab;
+    [HideInInspector]
     public AbstractBuildingBlock flag;
 
     void Start()
     {
-        GenerateWorld();
+        Vector3 flagSpawn = blocks[(int)size.x / 2, (int)size.y / 2].transform.position;
+        flagSpawn.y = 1;
+        flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
+        flag.transform.position = flagSpawn;
+        HideBuildNodes();
     }
 
     void OnValidate()
@@ -37,33 +42,36 @@ public class WorldScript : MonoBehaviour {
                 blocks[x, y].transform.position = Vector3.forward * x + Vector3.right * y;
             }
         }
-        Vector3 flagSpawn = blocks[(int)size.x / 2, (int)size.y / 2].transform.position;
-        flagSpawn.y = 1;
-        if (flag) Destroy(flag);
-        flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
-        flag.transform.position = flagSpawn;
     }
 
-    public void ShowGroundBuildNodes(bool topN, bool sideN)
+    public void ShowBuildNodes()
     {
+        //sweep the floor
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)
             {
                 if (blocks[x, y].isNodesActive)
                 {
-                    blocks[x - 1, y].ShowNodes(topN,sideN);
-                    blocks[x, y - 1].ShowNodes(topN, sideN);
+                    if (x - 1 >= 0) blocks[x - 1, y].ShowNodes(true, false);
+                    if (y - 1 >= 0) blocks[x, y - 1].ShowNodes(true, false);
                 }
                 else
                 {
-                    if (blocks[x - 1, y].isNodesActive || blocks[x, y - 1].isNodesActive)
-                    {
-                        blocks[x, y].ShowNodes(topN, sideN); ;
-                    }
+                    if(x > 0)
+                        if(blocks[x - 1, y].isNodesActive)
+                        {
+                            blocks[x, y].ShowNodes(true, false);
+                        }
+                    if(y > 0)
+                        if(blocks[x, y - 1].isNodesActive)
+                        {
+                            blocks[x, y].ShowNodes(true, false);
+                        }
                 }
             }
     }
-    public void HideGroundBuildNodes()
+
+    public void HideBuildNodes()
     {
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)
