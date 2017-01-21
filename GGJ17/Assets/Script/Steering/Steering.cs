@@ -7,7 +7,7 @@ public abstract class Steering : MonoBehaviour {
     public float weight;
     protected MyPhysics my;
 
-    public void Start()
+    public void Awake()
     {
         my = GetComponent<MyPhysics>();
     }
