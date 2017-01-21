@@ -7,12 +7,9 @@ public class Building_Extractor : AbstractBuildingBlock {
 	// Use this for initialization
 	void Start () {
         BuildingBlockInit bbi = new BuildingBlockInit();
-        bbi.up = true;
-        bbi.down = true;
-        bbi.left = true;
-        bbi.right = true;
-        bbi.front = true;
-        bbi.back = true;
+        bbi.up = bbi.down = true;
+        bbi.left = bbi.right = false;
+        bbi.front = bbi.back = false;
         Init(bbi);
     }
 }
