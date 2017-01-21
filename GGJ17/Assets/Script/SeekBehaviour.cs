@@ -19,15 +19,11 @@ public class SeekBehaviour : Steering {
     {
         SteeringOutput steering = new SteeringOutput();
         Vector3 dir = target.pos - my.pos;
-       // dir.y = 0;
 
         float dist = dir.magnitude;
 
         if (dist < targetRadius)
-        {
-            steering.linear = -my.vel;
             return steering;
-        }
 
         if (dist > slowRadius)
             targetSpeed = maxSpeed;

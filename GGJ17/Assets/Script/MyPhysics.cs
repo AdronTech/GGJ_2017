@@ -7,8 +7,10 @@ public class MyPhysics : MonoBehaviour {
     public Vector3 vel;
     public Vector3 acc;
     public float maxVel;
+    public float drag;
 
 	void Update () {
+
         pos = transform.position;
 
         GetComponent<Rigidbody>().MovePosition(transform.position + vel * Time.deltaTime);
