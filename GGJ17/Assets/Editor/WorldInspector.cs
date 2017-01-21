@@ -8,6 +8,7 @@ public class CustomWorldInspector : Editor {
     {
         DrawDefaultInspector();
         WorldScript w = (WorldScript) target;
+        GUILayout.Label("Children: "+w.transform.childCount +"");
         if (GUILayout.Button("Generate!"))
         {
             w.GenerateWorld();

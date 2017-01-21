@@ -15,23 +15,19 @@ public class WorldScript : MonoBehaviour {
 
     public void GenerateWorld()
     {
-        // clean previous ground
-        foreach (Transform t in transform.GetComponentInChildren<Transform>())
+        foreach(AbstractBuildingBlock a in GetComponentsInChildren<AbstractBuildingBlock>())
         {
-            if(transform != t)
-            {
-                Destroy(t.gameObject);
-            }
+            DestroyImmediate(a.gameObject);
         }
-
         // create new ground
-        for(int x = 0; x<size.x; x++)
+        for (int x = 0; x < size.x; x++)
         {
-            for(int y = 0; y<size.y; y++)
+            for (int y = 0; y < size.y; y++)
             {
                 GameObject o = Instantiate(groundSoil, transform);
                 o.transform.position = Vector3.forward * x + Vector3.right * y;
             }
         }
+
     }
 }
