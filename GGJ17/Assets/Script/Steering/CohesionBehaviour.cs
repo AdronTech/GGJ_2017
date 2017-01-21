@@ -23,8 +23,9 @@ public class CohesionBehaviour : Steering
 
         foreach (Collider col in colls)
         {
-            if (col.gameObject.GetComponent<CohesionBehaviour>() != null)
-                targets.Add(col.gameObject.GetComponent<MyPhysics>());
+            CohesionBehaviour other = col.gameObject.GetComponent<CohesionBehaviour>();
+            if (other != null && other != this)
+                targets.Add(other.gameObject.GetComponent<MyPhysics>());
         }
 
         SteeringOutput steering = new SteeringOutput();
@@ -40,7 +41,7 @@ public class CohesionBehaviour : Steering
             center += target.pos;
         }
 
-        center /= targets.Count;
+        center /= targets.Count + 1;
 
         Vector3 dir = center - my.pos;
         dir.Normalize();
