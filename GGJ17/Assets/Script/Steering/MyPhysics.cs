@@ -15,7 +15,26 @@ public class MyPhysics : MonoBehaviour {
     public float maxAngVel;
     public float drag = 0.01f;
 
-	void Update () {
+    protected Rigidbody myRigit;
+
+    void Start()
+    {
+        myRigit = GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate () {
+
+        // collision
+        Vector3 dir = vel.normalized;
+        RaycastHit rh = new RaycastHit();
+        if (myRigit.SweepTest(dir, out rh, vel.magnitude*Time.deltaTime) && !rh.collider.isTrigger)
+        {
+            if (rh.collider.GetComponent<AbstractBuildingBlock>() != null)
+            {
+                Vector3 off = rh.normal * 0.01f;
+                vel = dir * rh.distance + off;
+            }
+        }
 
         // physics stuff :D
         pos = transform.position;
@@ -51,8 +70,8 @@ public class MyPhysics : MonoBehaviour {
         }
 
         // move
-        GetComponent<Rigidbody>().MovePosition(pos);
-        GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(0, ang, 0));
+        myRigit.MovePosition(pos);
+        myRigit.MoveRotation(Quaternion.Euler(0, ang, 0));
     }
 
     public void applyForce(Vector3 f)
