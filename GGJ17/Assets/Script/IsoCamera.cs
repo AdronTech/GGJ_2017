@@ -9,10 +9,10 @@ public class IsoCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Vector3 globalCamForwardDir = transform.TransformVector(transform.forward).normalized;
-        Vector3 downProjectedCamForward = Vector3.Project(transform.forward, Vector3.down);
+        Vector3 globalCamForwardDir = transform.forward;
+        Vector3 downProjectedCamForward = Vector3.Project(transform.TransformVector(Vector3.forward), Vector3.down);
         float m = (transform.position.y - camFocusHeight) / downProjectedCamForward.magnitude;
-        focusPoint = globalCamForwardDir * m;
+        focusPoint = transform.position + globalCamForwardDir * m;
     }
 	
 	// Update is called once per frame
@@ -25,7 +25,6 @@ public class IsoCamera : MonoBehaviour {
         transform.Translate(translation, Space.World);
         focusPoint += translation;
         #endregion
-
         // poll the mouse
         if (Input.GetMouseButton(1))
         #region rotate
@@ -35,8 +34,16 @@ public class IsoCamera : MonoBehaviour {
             // horizontal
             transform.RotateAround(focusPoint, Vector3.up, rotation.x);
             // vertical
+            // no. just. no. ... definately no.
             // transform.RotateAround(focusPoint, Vector3.right, rotation.y);
         }
         #endregion
+    }
+
+    public void MoveFocusTo(Vector3 m)
+    {
+        m.y = camFocusHeight;
+        transform.Translate(m - focusPoint);
+        focusPoint = m;
     }
 }
