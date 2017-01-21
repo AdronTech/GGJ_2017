@@ -38,6 +38,7 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
     #endregion
 
     public bool penismode = false;
+
     public AbstractBuildingBlock[] neighbors = new AbstractBuildingBlock[6];
     protected BuildNode[] nodes = new BuildNode[6];
 
@@ -76,4 +77,38 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
             nodes[back].Init(back, this);
         }
     }
+
+    #region ActivateNodes
+    public bool nodesActive = false;
+    public void EnableNodes(bool topN, bool downN, bool sidesN)
+    {
+        nodesActive = true;
+        if (topN)
+        {
+            nodes[up].Enable = true;
+        }
+        if (downN)
+        {
+            nodes[down].Enable = true;
+        }
+        if (sidesN)
+        {
+            nodes[left].Enable = true;
+            nodes[right].Enable = true;
+            nodes[front].Enable = true;
+            nodes[back].Enable = true;
+        }
+        foreach(AbstractBuildingBlock a in neighbors)
+        {
+            if (!a.nodesActive) a.EnableNodes(topN, downN, sidesN);
+        }
+    }
+    public void Disable()
+    {
+        foreach(BuildNode n in nodes)
+        {
+            n.Enable = false;
+        }
+    }
+    #endregion
 }
