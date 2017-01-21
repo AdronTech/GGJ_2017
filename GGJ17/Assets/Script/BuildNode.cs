@@ -9,6 +9,9 @@ public class BuildNode : MonoBehaviour {
     private new BoxCollider collider;
     private new MeshRenderer renderer;
     private AbstractBuildingBlock block;
+    private FixedJoint joint;
+
+    public float jointBreakForce = 100;
 
     public Vector3 SpawnPosition
     {
@@ -22,15 +25,19 @@ public class BuildNode : MonoBehaviour {
     {
         set
         {
-            collider.enabled = value;
-            renderer.enabled = value;
+            if (!joint)
+            {
+                collider.enabled = value;
+                renderer.enabled = value;
+            }
         }
     }
 
-    void Start()
+    void Awake()
     {
         collider = GetComponent<BoxCollider>();
         renderer = GetComponent<MeshRenderer>();
+        collider.enabled = true;
     }
 
     public void Init(int i, AbstractBuildingBlock block)
@@ -67,6 +74,9 @@ public class BuildNode : MonoBehaviour {
         if (node)
         {
             block.neighbors[orientation] = node.block;
+            joint = block.gameObject.AddComponent<FixedJoint>();
+            joint.breakForce = jointBreakForce;
+            joint.connectedBody = node.block.GetComponent<Rigidbody>();
             renderer.enabled = false;
         }
     }
@@ -77,6 +87,7 @@ public class BuildNode : MonoBehaviour {
         if (node)
         {
             block.neighbors[orientation] = null;
+            if(joint) Destroy(joint);
             renderer.enabled = true;
         }
     }
