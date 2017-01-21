@@ -10,7 +10,25 @@ public class GodView : MonoBehaviour {
 
     public void enableConstructionMode(GameObject prefab)
     {
-
+        constructionPrefab = prefab;
+        WorldScript w = FindObjectOfType<WorldScript>();
+        AbstractBuildingBlock a = prefab.GetComponent<AbstractBuildingBlock>();
+        if (a)
+        {
+            if (a is Building_Wall)
+            {
+                w.flag.ShowNodes(true, true);
+            }
+            else if (a is Building_Extractor)
+            {
+                w.flag.ShowNodes(true, false);
+            }
+            else if (a is Building_Barracks)
+            {
+                w.flag.ShowNodes(true, false);
+            }
+        }
+        
     }
 
 	// Use this for initialization
@@ -30,7 +48,7 @@ public class GodView : MonoBehaviour {
                 BuildNode node = hit.collider.GetComponent<BuildNode>();
                 if (node)
                 {
-                    Instantiate(constructionPrefab, node.SpawnPosition, Quaternion.identity);
+                    Instantiate(constructionPrefab, node.GetSpawnPosition(), Quaternion.identity);
                 }
             }
         }

@@ -8,8 +8,7 @@ public class Building_Extractor : AbstractBuildingBlock {
 	void Start () {
         BuildingBlockInit bbi = new BuildingBlockInit();
         bbi.up = bbi.down = true;
-        bbi.left = bbi.right = false;
-        bbi.front = bbi.back = false;
+        bbi.sides = false;
         Init(bbi);
     }
 }
