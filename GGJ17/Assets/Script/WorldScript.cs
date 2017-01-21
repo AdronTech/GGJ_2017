@@ -12,6 +12,11 @@ public class WorldScript : MonoBehaviour {
     [HideInInspector]
     public AbstractBuildingBlock flag;
 
+    void Awake()
+    {
+        GenerateWorld();
+    }
+
     void Start()
     {
         Vector3 flagSpawn = blocks[(int)size.x / 2, (int)size.y / 2].transform.position;
@@ -83,13 +88,18 @@ public class WorldScript : MonoBehaviour {
 
     public void HideNodes()
     {
+        foreach (AbstractBuildingBlock a in FindObjectsOfType<AbstractBuildingBlock>())
+        {
+            if (a.tag == "Building")
+            {
+                a.HideNodes();
+            }
+        }
+
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)
             {
-                if (blocks[x, y].isNodesActive)
-                {
-                    blocks[x, y].HideNodes();
-                }
+                blocks[x, y].HideNodes();
             }
     }
 }
