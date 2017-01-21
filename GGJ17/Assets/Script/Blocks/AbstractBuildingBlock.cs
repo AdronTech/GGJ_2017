@@ -67,8 +67,6 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
             nodes[back] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
             nodes[back].Init(back, this, false);
         }
-        // initially dont show nodes
-        HideNodes();
     }
 
     #region ActivateNodes
@@ -99,6 +97,11 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
                 nodes[back].Show();
             }
         }
+        if(neighbors[down] && neighbors[down].tag == "Ground")
+        {
+            // update ground beneath me
+            neighbors[down].isNodesActive = true;
+        }
     }
 
     public void HideNodes()
@@ -107,6 +110,11 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
         foreach(BuildNode n in nodes)
         {
             if(n) n.Hide();
+        }
+        // update ground beneath me
+        if (neighbors[down] && neighbors[down].tag == "Ground")
+        {
+            neighbors[down].isNodesActive = false;
         }
     }
     #endregion

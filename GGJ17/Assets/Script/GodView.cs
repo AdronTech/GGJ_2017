@@ -15,17 +15,16 @@ public class GodView : MonoBehaviour {
         AbstractBuildingBlock a = prefab.GetComponent<AbstractBuildingBlock>();
         if (a is Building_Wall)
         {
-            w.flag.ShowNodes(true, true);
+            w.ShowNodes(true, true);
         }
         else if (a is Building_Extractor)
         {
-            w.flag.ShowNodes(true, false);
+            w.ShowNodes(true, false);
         }
         else if (a is Building_Barracks)
         {
-            w.flag.ShowNodes(true, false);
+            w.ShowNodes(true, false);
         }
-        w.ShowBuildNodes();
     }
 
 	// Use this for initialization
@@ -49,6 +48,11 @@ public class GodView : MonoBehaviour {
                     Instantiate(constructionPrefab, node.GetSpawnPosition(), Quaternion.identity);
                 }
             }
+        }
+        if (Input.GetMouseButtonDown(1) && constructionPrefab != null)
+        {
+            w.HideNodes();
+            constructionPrefab = null;
         }
     }
 }
