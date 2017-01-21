@@ -10,6 +10,7 @@ public class GodView : MonoBehaviour {
 
     public void enableConstructionMode(GameObject prefab)
     {
+        constructionPrefab = prefab;
         WorldScript w = FindObjectOfType<WorldScript>();
         AbstractBuildingBlock a = prefab.GetComponent<AbstractBuildingBlock>();
         if (a)
