@@ -12,7 +12,10 @@ public class SeekBehaviour : Steering {
 
     public override SteeringOutput getSteering()
     {
+
         SteeringOutput steering = new SteeringOutput();
+
+        if (target == null) return steering;
 
         Vector3 des = target.pos - my.pos;
         float d = des.magnitude;

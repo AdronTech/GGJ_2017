@@ -34,7 +34,7 @@ public class SeperationBehaviour : Steering
         foreach (MyPhysics target in targets)
         {
             Vector3 diff = my.pos - target.pos;
-            steering.linear += diff.normalized;
+            steering.linear += diff / (diff.magnitude * diff.magnitude);
         }
 
         if (targets.Count > 0)
