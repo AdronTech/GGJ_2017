@@ -18,7 +18,7 @@ public class WorldScript : MonoBehaviour {
         flagSpawn.y = 1;
         flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
         flag.transform.position = flagSpawn;
-        HideBuildNodes();
+        HideNodes();
     }
 
     void OnValidate()
@@ -44,8 +44,18 @@ public class WorldScript : MonoBehaviour {
         }
     }
 
-    public void ShowBuildNodes()
+    public void ShowNodes(bool topN, bool sidesN)
     {
+        HideNodes();
+        // activate all building nodes needed
+        foreach(AbstractBuildingBlock a in FindObjectsOfType<AbstractBuildingBlock>())
+        {
+            if(a.tag == "Building")
+            {
+                a.ShowNodes(topN, sidesN);
+            }
+        }
+
         //sweep the floor
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)
@@ -71,7 +81,7 @@ public class WorldScript : MonoBehaviour {
             }
     }
 
-    public void HideBuildNodes()
+    public void HideNodes()
     {
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)

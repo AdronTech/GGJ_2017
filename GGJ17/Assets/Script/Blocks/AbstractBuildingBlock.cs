@@ -99,6 +99,10 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
                 nodes[back].Show();
             }
         }
+        if(neighbors[down].tag == "Ground")
+        {
+            isNodesActive = true;
+        }
     }
 
     public void HideNodes()
@@ -107,6 +111,10 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
         foreach(BuildNode n in nodes)
         {
             if(n) n.Hide();
+        }
+        if (neighbors[down].tag == "Ground")
+        {
+            isNodesActive = false;
         }
     }
     #endregion
