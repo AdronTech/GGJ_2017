@@ -8,8 +8,7 @@ public class Building_Barracks : AbstractBuildingBlock {
 	void Start () {
         BuildingBlockInit bbi = new BuildingBlockInit();
         bbi.up = bbi.down = true;
-        bbi.left =  bbi.right = true;
-        bbi.front = bbi.back = true;
+        bbi.sides = false;
         Init(bbi);
     }
 }

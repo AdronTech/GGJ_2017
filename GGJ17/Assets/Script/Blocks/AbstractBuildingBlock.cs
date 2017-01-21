@@ -6,7 +6,7 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
     
     public struct BuildingBlockInit
     {
-        public bool up , down, left, right, front, back;
+        public bool up, down, sides;
     }
 
     #region Static
@@ -43,71 +43,71 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
     protected BuildNode[] nodes = new BuildNode[6];
 
 	// Use this for initialization
-	protected void Init(BuildingBlockInit init) {
+	public void Init(BuildingBlockInit init) {
         Rigidbody r = GetComponent<Rigidbody>();
         r.freezeRotation = !penismode;
         if (init.up)
         {
             nodes[up] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[up].Init(up, this);
+            nodes[up].Init(up, this, false);
         }
         if (init.down)
         {
             nodes[down] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[down].Init(down, this);
+            nodes[down].Init(down, this, true);
         }
-        if (init.left)
+        if (init.sides)
         {
             nodes[left] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[left].Init(left, this);
-        }
-        if (init.right)
-        {
+            nodes[left].Init(left, this, false);
             nodes[right] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[right].Init(right, this);
-        }
-        if (init.front)
-        {
+            nodes[right].Init(right, this, false);
             nodes[front] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[front].Init(front, this);
-        }
-        if (init.back)
-        {
+            nodes[front].Init(front, this, false);
             nodes[back] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
-            nodes[back].Init(back, this);
+            nodes[back].Init(back, this, false);
         }
+        HideNodes();
     }
 
     #region ActivateNodes
-    public bool nodesActive = false;
-    public void EnableNodes(bool topN, bool downN, bool sidesN)
+    public bool isNodesActive = false;
+    public void ShowNodes(bool topN, bool sidesN)
     {
-        nodesActive = true;
-        if (topN)
+        isNodesActive = true;
+        if (topN && neighbors[up] == null)
         {
-            nodes[up].Enable = true;
-        }
-        if (downN)
-        {
-            nodes[down].Enable = true;
+            nodes[up].Show();
         }
         if (sidesN)
         {
-            nodes[left].Enable = true;
-            nodes[right].Enable = true;
-            nodes[front].Enable = true;
-            nodes[back].Enable = true;
-        }
-        foreach(AbstractBuildingBlock a in neighbors)
-        {
-            if (!a.nodesActive) a.EnableNodes(topN, downN, sidesN);
+            if(neighbors[left] == null)
+            {
+                nodes[left].Show();
+            }
+            if (neighbors[left] == null)
+            {
+                nodes[right].Show();
+            }
+            if (neighbors[left] == null)
+            {
+                nodes[front].Show();
+            }
+            if (neighbors[left] == null)
+            {
+                nodes[back].Show();
+            }
         }
     }
-    public void Disable()
+
+    public void HideNodes()
     {
-        foreach(BuildNode n in nodes)
+        if (nodes == null)
         {
-            n.Enable = false;
+            foreach(BuildNode n in nodes)
+            {
+                if(n == null) n.Hide();
+            }
         }
     }
     #endregion
