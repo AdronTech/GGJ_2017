@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AbstractBuildingBlock : MonoBehaviour {
-
+    
     public struct BuildingBlockInit
     {
         public bool up , down, left, right, front, back;
@@ -37,11 +37,14 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
     private GameObject nodePrefab;
     #endregion
 
+    public bool penismode = false;
     public AbstractBuildingBlock[] neighbors = new AbstractBuildingBlock[6];
     protected BuildNode[] nodes = new BuildNode[6];
 
 	// Use this for initialization
 	protected void Init(BuildingBlockInit init) {
+        Rigidbody r = GetComponent<Rigidbody>();
+        r.freezeRotation = !penismode;
         if (init.up)
         {
             nodes[up] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
