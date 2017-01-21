@@ -10,7 +10,7 @@ public class DialogBox : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        textbox = GetComponent<Text>();
+        textbox = GetComponentInChildren<Text>();
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class DialogBox : MonoBehaviour
         {
             textbox.text += text[i];
             ++i;
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(.07f);
         }
     }
 }
