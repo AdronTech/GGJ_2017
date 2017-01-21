@@ -10,7 +10,7 @@ public class GodView : MonoBehaviour {
 
     public void enableConstructionMode(GameObject prefab)
     {
-
+        constructionPrefab = prefab;
     }
 
 	// Use this for initialization
