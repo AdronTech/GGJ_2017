@@ -12,11 +12,6 @@ public class WorldScript : MonoBehaviour {
     [HideInInspector]
     public AbstractBuildingBlock flag;
 
-    void Awake()
-    {
-        GenerateWorld();
-    }
-
     void Start()
     {
         Vector3 flagSpawn = blocks[(int)size.x / 2, (int)size.y / 2].transform.position;
