@@ -12,4 +12,7 @@ public class Building_EnemyLair : AbstractBuildingBlock {
         bbi.sides = true;
         Init(bbi);
     }
+
+    public new void ShowNodes(bool topN, bool botN) { }
+    public new void HideNodes() { }
 }

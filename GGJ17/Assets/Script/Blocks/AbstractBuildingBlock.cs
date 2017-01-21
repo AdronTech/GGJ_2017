@@ -67,11 +67,12 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
             nodes[back] = Instantiate(nodePrefab, transform).GetComponent<BuildNode>();
             nodes[back].Init(back, this, false);
         }
+        // initially dont show nodes
         HideNodes();
     }
 
     #region ActivateNodes
-    public bool isNodesActive = false;
+    public bool isNodesActive = true;
     public void ShowNodes(bool topN, bool sidesN)
     {
         isNodesActive = true;
@@ -81,19 +82,19 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
         }
         if (sidesN)
         {
-            if(neighbors[left] == null)
+            if (neighbors[left] == null)
             {
                 nodes[left].Show();
             }
-            if (neighbors[left] == null)
+            if (neighbors[right] == null)
             {
                 nodes[right].Show();
             }
-            if (neighbors[left] == null)
+            if (neighbors[front] == null)
             {
                 nodes[front].Show();
             }
-            if (neighbors[left] == null)
+            if (neighbors[back] == null)
             {
                 nodes[back].Show();
             }
@@ -102,12 +103,10 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
 
     public void HideNodes()
     {
-        if (nodes == null)
+        isNodesActive = false;
+        foreach(BuildNode n in nodes)
         {
-            foreach(BuildNode n in nodes)
-            {
-                if(n == null) n.Hide();
-            }
+            if(n) n.Hide();
         }
     }
     #endregion
