@@ -3,35 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildNode : MonoBehaviour {
-
-    private int orientation;
-
+    #region references
     private new BoxCollider collider;
     private new MeshRenderer renderer;
     private AbstractBuildingBlock block;
+    #endregion
+
+    private int orientation;
     private FixedJoint joint;
-
     public float jointBreakForce = 100;
-
-    public Vector3 SpawnPosition
-    {
-        get
-        {
-            return AbstractBuildingBlock.SpawnPoint(transform.parent.position, orientation);
-        }
-    }
-
-    public bool Enable
-    {
-        set
-        {
-            if (!joint)
-            {
-                collider.enabled = value;
-                renderer.enabled = value;
-            }
-        }
-    }
 
     void Awake()
     {
@@ -40,8 +20,25 @@ public class BuildNode : MonoBehaviour {
         collider.enabled = true;
     }
 
-    public void Init(int i, AbstractBuildingBlock block)
+    void OnTriggerEnter(Collider c)
     {
+        BuildNode node = c.GetComponent<BuildNode>();
+        if (node)
+        {
+            block.neighbors[orientation] = node.block;
+            joint = block.gameObject.AddComponent<FixedJoint>();
+            joint.breakForce = jointBreakForce;
+            joint.connectedBody = node.block.GetComponent<Rigidbody>();
+        }
+    }
+    
+    public void Init(int i, AbstractBuildingBlock block, bool invis)
+    {
+        if (invis)
+        {
+            Destroy(renderer);
+            Destroy(GetComponent<MeshFilter>());
+        }
         this.block = block;
         orientation = i;
         transform.position = transform.parent.position;
@@ -68,27 +65,23 @@ public class BuildNode : MonoBehaviour {
         }
     }
 
-    void OnTriggerEnter(Collider c)
+    public void Show()
     {
-        BuildNode node = c.GetComponent<BuildNode>();
-        if (node)
+        if (!joint)
         {
-            block.neighbors[orientation] = node.block;
-            joint = block.gameObject.AddComponent<FixedJoint>();
-            joint.breakForce = jointBreakForce;
-            joint.connectedBody = node.block.GetComponent<Rigidbody>();
-            renderer.enabled = false;
+            if (renderer) renderer.enabled = true;
+            collider.enabled = true;
         }
     }
 
-    void OnTriggerExit(Collider c)
+    public void Hide()
     {
-        BuildNode node = c.GetComponent<BuildNode>();
-        if (node)
-        {
-            block.neighbors[orientation] = null;
-            if(joint) Destroy(joint);
-            renderer.enabled = true;
-        }
+        if (renderer) renderer.enabled = false;
+        collider.enabled = false;
+    }
+
+    public Vector3 GetSpawnPosition()
+    {
+        return AbstractBuildingBlock.SpawnPoint(transform.parent.position, orientation);
     }
 }

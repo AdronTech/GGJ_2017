@@ -9,10 +9,7 @@ public class Building_Wall : AbstractBuildingBlock {
         BuildingBlockInit bbi = new BuildingBlockInit();
         bbi.up = true;
         bbi.down = true;
-        bbi.left = true;
-        bbi.right = true;
-        bbi.front = true;
-        bbi.back = true;
+        bbi.sides = true;
         Init(bbi);
     }
 }

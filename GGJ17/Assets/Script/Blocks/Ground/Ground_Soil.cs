@@ -8,11 +8,7 @@ public class Ground_Soil : AbstractBuildingBlock {
 	void Start () {
         BuildingBlockInit bbi = new BuildingBlockInit();
         bbi.up = true;
-        bbi.down = false;
-        bbi.left = true;
-        bbi.right = true;
-        bbi.front = true;
-        bbi.back = true;
+        bbi.down = bbi.sides = false;
         Init(bbi);
 	}
 
