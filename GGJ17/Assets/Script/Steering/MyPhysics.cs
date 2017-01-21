@@ -24,12 +24,13 @@ public class MyPhysics : MonoBehaviour {
         acc *= 0;
 
         //ang = transform.rotation.y;
-        ang = Mathf.Atan2(-vel.z, vel.x) * Mathf.Rad2Deg; // += ang_vel * Time.deltaTime;
+        ang += ang_vel * Time.deltaTime;
         ang_vel += ang_acc * Time.deltaTime;
         ang_acc *= 0;
 
         // do not go too fast
         Vector3.ClampMagnitude(vel, maxVel);
+        ang = ((((ang + 180) % 360) + 360) % 360) -180 ;
         ang_vel = Mathf.Clamp(ang_vel, -maxAngVel, maxAngVel);
 
         // drag

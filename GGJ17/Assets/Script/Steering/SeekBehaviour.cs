@@ -33,6 +33,7 @@ public class SeekBehaviour : Steering {
         steering.linear = des - my.vel;
         steering.linear = Vector3.ClampMagnitude(steering.linear, maxAcc);
 
+        my.ang = Mathf.Atan2(-des.z, des.x) * Mathf.Rad2Deg;
         return steering;
     }
 

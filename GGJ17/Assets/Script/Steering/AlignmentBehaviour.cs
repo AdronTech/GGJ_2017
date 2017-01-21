@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CohesionBehaviour : Steering
-{
+public class AlignmentBehaviour : Steering {
+
     private List<MyPhysics> targets;
 
     public float maxAcc;
     public float radius;
 
-    public CohesionBehaviour()
+    public AlignmentBehaviour()
     {
         targets = new List<MyPhysics>();
     }
@@ -32,19 +31,14 @@ public class CohesionBehaviour : Steering
         if (targets.Count == 0)
             return steering;
 
-        Vector3 center = new Vector3();
-        center += my.pos;
-
+        Vector3 vel = new Vector3();
         foreach (MyPhysics target in targets)
         {
-            center += target.pos;
+            vel += target.vel;
         }
 
-        center /= targets.Count + 1;
-
-        Vector3 dir = center - my.pos;
-        dir.Normalize();
-        steering.linear = dir * maxAcc;
+        vel /= targets.Count;
+        steering.linear = Vector3.ClampMagnitude(vel * maxAcc, maxAcc);
 
         return steering;
     }
