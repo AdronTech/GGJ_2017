@@ -94,14 +94,9 @@ public class Building_Barracks : AbstractBaseBuilding {
             {
                 if (!isAlerted)
                 {
-                    StartCoroutine(Engaging());
                     IsAlerted = true;
+                    StartCoroutine(Engaging());
                 }
-                clearTicks = 0;
-            }
-            else if(++clearTicks == ticksToLeaveAlert)
-            {
-                IsAlerted = false;
             }
             yield return new WaitForSeconds(sonarPulseIntervall);
         }
@@ -121,5 +116,6 @@ public class Building_Barracks : AbstractBaseBuilding {
                 ousiaRay.enabled = false;
             }
         }
+        IsAlerted = false;
     }
 }
