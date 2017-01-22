@@ -38,4 +38,15 @@ public class SeekBehaviour : Steering {
         return steering;
     }
 
+    public void start()
+    {
+        Enabled = true;
+    }
+
+    public void stop()
+    {
+        my.stop();
+        Enabled = false;
+    }
+
 }

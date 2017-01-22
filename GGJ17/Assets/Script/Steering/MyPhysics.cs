@@ -64,9 +64,12 @@ public class MyPhysics : MonoBehaviour {
         // collect steering behaviours
         foreach (Steering steering in GetComponents<Steering>())
         {
-            SteeringOutput so = steering.getSteering();
-            applyForce(so.linear * steering.weight);
-            ang_acc += so.angular * steering.weight;
+            if (steering.Enabled)
+            {
+                SteeringOutput so = steering.getSteering();
+                applyForce(so.linear * steering.weight);
+                ang_acc += so.angular * steering.weight;
+            }
         }
 
         // move
@@ -77,6 +80,12 @@ public class MyPhysics : MonoBehaviour {
     public void applyForce(Vector3 f)
     {
         acc += f;
+    }
+
+    public void stop()
+    {
+        vel = Vector3.zero;
+        acc = Vector3.zero;
     }
 
 }
