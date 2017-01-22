@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class IsoCamera : MonoBehaviour {
 
-    public float panSpeed = 10, rotateSpeed = 10, camFocusHeight = 0;
+    public float panSpeed = 10, rotateSpeed = 100, zoomSpeed = 5;
+    private const float camFocusHeight = 0;
     private Vector3 focusPoint, mousePosition;
+    private new Camera camera;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+        camera = GetComponent<Camera>();
         Vector3 globalCamForwardDir = transform.forward;
         Vector3 downProjectedCamForward = Vector3.Project(transform.TransformVector(Vector3.forward), Vector3.down);
         float m = (transform.position.y - camFocusHeight) / downProjectedCamForward.magnitude;
@@ -37,6 +40,9 @@ public class IsoCamera : MonoBehaviour {
             // no. just. no. ... definately no.
             // transform.RotateAround(focusPoint, Vector3.right, rotation.y);
         }
+        #endregion
+        #region zoom
+        camera.orthographicSize += Input.mouseScrollDelta.y * zoomSpeed * Time.deltaTime;
         #endregion
     }
 
