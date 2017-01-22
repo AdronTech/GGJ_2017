@@ -13,7 +13,12 @@ public class GodView : MonoBehaviour {
     {
         constructionPrefab = prefab;
         AbstractBuildingBlock a = prefab.GetComponent<AbstractBuildingBlock>();
-        if (a is Building_Wall)
+        if(prefab.tag == "DESTRUCTION")
+        {
+            w.HideNodes();
+            isDestruct = true;
+        }
+        else if (a is Building_Wall)
         {
             w.ShowNodes(true, true);
         }
@@ -45,24 +50,41 @@ public class GodView : MonoBehaviour {
                 RaycastHit hit;
                 if (Physics.Raycast(myCam.ScreenPointToRay(Input.mousePosition), out hit))
                 {
-                    BuildNode node = hit.collider.GetComponent<BuildNode>();
-                    if (node)
+                    if (constructionPrefab)
                     {
-                        Instantiate(construction, node.GetSpawnPosition(), Quaternion.identity);
+                        BuildNode node = hit.collider.GetComponent<BuildNode>();
+                        if (node)
+                        {
+                            Instantiate(construction, node.GetSpawnPosition(), Quaternion.identity);
+                        }
+                        yield return new WaitForFixedUpdate();
+                        enableConstructionMode(constructionPrefab);
                     }
-                    yield return new WaitForFixedUpdate();
-                    enableConstructionMode(constructionPrefab);
+                    else if (isDestruct)
+                    {
+                        AbstractBaseBuilding a = hit.collider.GetComponent<AbstractBaseBuilding>();
+                        if (a)
+                        {
+                            if (a is Building_Flag)
+                            {}
+                            else
+                            {
+                                a.HP = -1;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
+    public bool isDestruct = true;
     IEnumerator MouseRightClick()
     {
         while (true)
         {
             yield return new WaitUntil(() => Input.GetMouseButtonDown(1));
             constructionPrefab = null;
+            isDestruct = false;
             w.HideNodes();
         }
     }
