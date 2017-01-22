@@ -7,7 +7,7 @@ public class Building_EnemyLair : AbstractBuildingBlock {
     #region Instantiate
     public GameObject spawnPrefab;
     #endregion
-    public float spawnFrequence = 20;
+    public float spawnFrequence = 20, startDelay = 1;
 
     // Use this for initialization
     void Awake () {
@@ -20,27 +20,10 @@ public class Building_EnemyLair : AbstractBuildingBlock {
     
     void Start()
     {
-        StartCoroutine(SpawnDrops());
+        StartCoroutine(GetComponentInChildren<LairCannon>().SpawnDrops(this, startDelay));
     }
 
-    IEnumerator SpawnDrops()
-    {
-        ParticleSystem spwner = GetComponent<ParticleSystem>();
-        while (true)
-        {
-            yield return new WaitForSeconds(spawnFrequence);
-            if(spwner)spwner.Emit(1);
-        }
-    }
 
-    void OnParticleCollision(GameObject go)
-    {
-        Debug.Log("Blubl");
-        if (go.tag.Equals("Ground"))
-        {
-            Debug.Log("Blubl" + go.transform.position);
-            GameObject obj = Instantiate(spawnPrefab);
-            obj.transform.position = go.transform.position + Vector3.up * 1.2f;
-        }
-    }
+
+
 }
