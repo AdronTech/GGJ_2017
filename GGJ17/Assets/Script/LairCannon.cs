@@ -6,7 +6,7 @@ public class LairCannon : MonoBehaviour {
     
     void OnParticleCollision(GameObject go)
     {
-        if (go.tag.Equals("Ground"))
+        if (go.tag == "Ground")
         {
             Building_EnemyLair lair = GetComponentInParent<Building_EnemyLair>();
             GameObject obj = Instantiate(lair.spawnPrefab);
