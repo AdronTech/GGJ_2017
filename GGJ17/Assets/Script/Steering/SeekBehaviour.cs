@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class SeekBehaviour : Steering {
 
-    public MyPhysics target;
+    public Transform target;
 
     public float maxAcc;
     public float maxSpeed;
@@ -18,7 +18,7 @@ public class SeekBehaviour : Steering {
 
         if (target == null) return steering;
 
-        Vector3 des = target.pos - my.pos;
+        Vector3 des = target.position - my.pos;
         float d = des.magnitude;
         des.Normalize();
 
@@ -36,6 +36,17 @@ public class SeekBehaviour : Steering {
 
         my.ang = Mathf.Atan2(-des.z, des.x) * Mathf.Rad2Deg;
         return steering;
+    }
+
+    public void start()
+    {
+        Enabled = true;
+    }
+
+    public void stop()
+    {
+        my.stop();
+        Enabled = false;
     }
 
 }
