@@ -34,6 +34,6 @@ public class Building_Barracks : AbstractBaseBuilding {
 
     public IEnumerator OnAlert()
     {
-
+        yield return null;
     }
 }
