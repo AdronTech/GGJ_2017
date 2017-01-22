@@ -47,7 +47,10 @@ public class Dialog : MonoBehaviour
 
             yield return StartCoroutine(MoveDialogBox(rect, 
                 new Vector3(rect.anchoredPosition.x, 
-                -rect.rect.height / 2 - (i * rect.rect.height) - 14)));
+                -rect.rect.height / 2 - (i * rect.rect.height) - 30)));
+
+            rect.anchoredPosition = new Vector3(rect.rect.width / 2 + 17,
+                -rect.rect.height / 2 - (i * rect.rect.height) - 30 - 15*i);
 
             DialogBox d = box.GetComponent<DialogBox>();
             d.text = speeches[i].text;
@@ -62,6 +65,16 @@ public class Dialog : MonoBehaviour
             rect.anchoredPosition += Vector2.up * 1000 * Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void Reset()
+    {
+        foreach(DialogBox d in FindObjectsOfType<DialogBox>())
+        {
+            Destroy(d.gameObject);
+        }
+
+        speeches.Clear();
     }
 
     internal void Clear()
