@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IntroSequence : MonoBehaviour
 {
@@ -50,5 +51,36 @@ public class IntroSequence : MonoBehaviour
         d.speeches.Add(e);
 
         yield return StartCoroutine(d.Talk());
+
+        d.Reset();
+
+        e = new Dialog.DialogElement();
+        e.dialogBox = d.dialogBoxes[1];
+        e.text = "Mission control, we are now entering Psion's orbit.";
+        d.speeches.Add(e);
+
+        e = new Dialog.DialogElement();
+        e.dialogBox = d.dialogBoxes[1];
+        e.text = "Mission control, please come in! We are just above Psion..... Do you copy?";
+        d.speeches.Add(e);
+
+        e = new Dialog.DialogElement();
+        e.dialogBox = d.dialogBoxes[1];
+        e.text = "They are not answering!";
+        d.speeches.Add(e);
+
+        e = new Dialog.DialogElement();
+        e.dialogBox = d.dialogBoxes[1];
+        e.text = "Check the main systems!";
+        d.speeches.Add(e);
+
+        e = new Dialog.DialogElement();
+        e.dialogBox = d.dialogBoxes[1];
+        e.text = "Whate the ...? Something has fried our computer! We are coming down hard. Brace for impact.";
+        d.speeches.Add(e);
+
+        yield return StartCoroutine(d.Talk());
+
+        SceneManager.LoadScene(2, LoadSceneMode.Single);
     }
 }
