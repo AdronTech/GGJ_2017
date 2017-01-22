@@ -112,7 +112,8 @@ public class KingBehaviour : MonoBehaviour {
                     bestTarget = possible;
             }
 
-            if (!mySeek.target || !possibleTargets.Contains(mySeek.target) ||
+            if (!mySeek.target || 
+                !possibleTargets.Contains(mySeek.target) ||
                 getPriority(bestTarget) > getPriority(mySeek.target) ||
                 (getPriority(bestTarget) == getPriority(mySeek.target) && Vector3.Distance(my.pos, bestTarget.position) <= Vector3.Distance(my.pos, mySeek.target.position)))
                 mySeek.target = bestTarget;
