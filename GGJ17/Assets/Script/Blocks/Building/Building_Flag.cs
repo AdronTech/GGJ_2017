@@ -16,11 +16,14 @@ public class Building_Flag : AbstractBaseBuilding {
         Init(bbi);
     }
 
+    private void OnDestroy()
+    {
+        SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
+    }
 
     public new void DestroyBuilding()
     {
         // Todo GameOver
         Destroy(gameObject);
-        SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
     }
 }
