@@ -8,6 +8,7 @@ public class SeekBehaviour : Steering {
     public MyPhysics target;
 
     public float maxAcc;
+    public float maxSpeed;
     public float radius;
 
     public override SteeringOutput getSteering()
@@ -23,11 +24,11 @@ public class SeekBehaviour : Steering {
 
         if(d < radius)
         {
-            des *= d * my.maxVel / radius * 0.5f;
+            des *= d * maxSpeed / radius;
         }
         else
         {
-            des *= my.maxVel;
+            des *= maxSpeed;
         }
 
         steering.linear = des - my.vel;

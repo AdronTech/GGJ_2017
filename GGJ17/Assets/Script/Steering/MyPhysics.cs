@@ -17,7 +17,7 @@ public class MyPhysics : MonoBehaviour {
 
     protected Rigidbody myRigit;
 
-    void Start()
+    void Awake()
     {
         myRigit = GetComponent<Rigidbody>();
     }
@@ -27,7 +27,7 @@ public class MyPhysics : MonoBehaviour {
         // collision
         Vector3 dir = vel.normalized;
         RaycastHit rh = new RaycastHit();
-        if (myRigit.SweepTest(dir, out rh, vel.magnitude*Time.deltaTime) && !rh.collider.isTrigger)
+        if (myRigit.SweepTest(dir, out rh, vel.magnitude * Time.deltaTime) && !rh.collider.isTrigger)
         {
             if (rh.collider.GetComponent<AbstractBuildingBlock>() != null)
             {
@@ -40,22 +40,22 @@ public class MyPhysics : MonoBehaviour {
         pos = transform.position;
         pos += vel * Time.deltaTime;
         vel += acc * Time.deltaTime;
-        acc *= 0;
+        acc = Vector3.zero;
 
         //ang = transform.rotation.y;
         ang += ang_vel * Time.deltaTime;
         ang_vel += ang_acc * Time.deltaTime;
-        ang_acc *= 0;
+        ang_acc = 0;
 
         // do not go too fast
-        Vector3.ClampMagnitude(vel, maxVel);
+        vel = Vector3.ClampMagnitude(vel, maxVel);
+        //vel.y = 0;
         ang = ((((ang + 180) % 360) + 360) % 360) -180 ;
         ang_vel = Mathf.Clamp(ang_vel, -maxAngVel, maxAngVel);
 
         // drag
         Vector3 d = -vel;
-        d *= drag;
-        applyForce(d);
+        applyForce(d * drag);
 
         float ang_d = -ang_vel;
         ang_d *= drag;

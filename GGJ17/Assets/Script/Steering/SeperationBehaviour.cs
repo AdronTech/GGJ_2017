@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SeperationBehaviour : Steering
 {
-    private List<MyPhysics> targets;
+    public List<MyPhysics> targets;
 
     public float maxAcc;
     public float radius;
@@ -17,24 +17,16 @@ public class SeperationBehaviour : Steering
 
     public override SteeringOutput getSteering()
     {
-        // Detect nearby creatures
-        targets.Clear();
-
-        Collider[] colls = Physics.OverlapSphere(my.pos, radius);
-
-        foreach (Collider col in colls)
-        {
-            SeperationBehaviour other = col.gameObject.GetComponent<SeperationBehaviour>();
-            if (other != null && other != this)
-                targets.Add(other.gameObject.GetComponent<MyPhysics>());
-        }
-
         SteeringOutput steering = new SteeringOutput();
 
         foreach (MyPhysics target in targets)
         {
+            if (target == my) continue;
+
             Vector3 diff = my.pos - target.pos;
-            steering.linear += diff / (diff.magnitude * diff.magnitude);
+            float dist = diff.magnitude;
+            if(dist < radius)
+                steering.linear += diff / (dist * dist);
         }
 
         if (targets.Count > 0)
