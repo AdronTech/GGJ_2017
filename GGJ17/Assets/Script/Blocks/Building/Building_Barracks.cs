@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Building_Barracks : AbstractBaseBuilding {
 
-    public Vector3 effectiveRange = new Vector3(5, 20, 5);
+    public float effectiveRange = 5;
     public float sonarPulseIntervall = 2f;
     public int ticksToLeaveAlert = 10;
     public float alertResourceDrain = -0.1f;
     public float attackAimDuration = 1f, attackFlareDuration = 0.1f;
 
+    public Collider[] enemiesSpotted = new Collider[0];
     private LineRenderer ousiaRay;
-    private Collider[] enemiesSpotted = new Collider[0];
 
     private bool isAlerted;
     public bool IsAlerted
@@ -48,10 +48,10 @@ public class Building_Barracks : AbstractBaseBuilding {
 
     private bool AlertCheck(out Collider[] cc)
     {
-        cc = Physics.OverlapBox(transform.position,
-                                            effectiveRange,
-                                            Quaternion.identity,
-                                            LayerMask.NameToLayer("Enemy"));
+        int layer = 1 << LayerMask.NameToLayer("Enemy");
+
+        cc = Physics.OverlapSphere(Vector3.Scale(transform.position, new Vector3(1, 0, 1)), effectiveRange, layer);
+
         return cc.Length > 0;
     }
 
@@ -59,9 +59,13 @@ public class Building_Barracks : AbstractBaseBuilding {
     {
         foreach(Collider enemy in enemiesSpotted)
         {
-            if (EvaluateTarget(enemy))
+            if (enemy)
             {
-                return enemy;
+                Debug.DrawLine(transform.position, enemy.transform.position, Color.cyan, 1);
+                if (EvaluateTarget(enemy))
+                {
+                    return enemy;
+                }
             }
         }
         return null;
@@ -69,10 +73,16 @@ public class Building_Barracks : AbstractBaseBuilding {
 
     public bool EvaluateTarget(Collider enemy)
     {
-        Vector3 dir = enemy.transform.position - transform.position;
-        float distance = dir.magnitude;
-        dir.Normalize();
-        return !Physics.Raycast(transform.position, dir, distance, LayerMask.NameToLayer("Building"));
+        if (enemy)
+        {
+            int layer = 1 << LayerMask.NameToLayer("Building");
+            Vector3 dir = enemy.transform.position - transform.position;
+            float distance = dir.magnitude;
+            dir.Normalize();
+            Debug.DrawRay(transform.position + dir * (Vector3.one * 0.5f).magnitude, dir * distance, Color.red, 1);
+            return !Physics.Raycast(transform.position + dir * (Vector3.one*0.5f).magnitude, dir, distance, layer);
+        }
+        return false;
     }
 
     public int clearTicks = 0;
@@ -80,8 +90,7 @@ public class Building_Barracks : AbstractBaseBuilding {
     {
         while(true)
         {
-            Collider[] cc;
-            if(AlertCheck(out cc))
+            if(AlertCheck(out enemiesSpotted))
             {
                 if (!isAlerted)
                 {
@@ -100,21 +109,17 @@ public class Building_Barracks : AbstractBaseBuilding {
 
     public IEnumerator Engaging()
     {
-        Debug.Log("Engaged!");
         for(Collider target = AquireTarget(); target; target = AquireTarget())
         {
-            Debug.Log("Aiming!");
-            Debug.DrawLine(transform.position, target.transform.position, Color.cyan);
             yield return new WaitForSeconds(attackAimDuration);
             if (EvaluateTarget(target))
             {
                 ousiaRay.SetPosition(1, target.transform.position);
                 ousiaRay.enabled = true;
-                Destroy(target.gameObject);
+                Destroy(target.gameObject, attackFlareDuration);
                 yield return new WaitForSeconds(attackFlareDuration);
                 ousiaRay.enabled = false;
             }
         }
-        Debug.Log("No Targets!");
     }
 }
