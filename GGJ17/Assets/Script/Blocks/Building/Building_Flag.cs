@@ -12,4 +12,11 @@ public class Building_Flag : AbstractBaseBuilding {
         bbi.sides = false;
         Init(bbi);
     }
+
+
+    public new void DestroyBuilding()
+    {
+        // Todo GameOver
+        Destroy(gameObject);
+    }
 }
