@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building_Wall : AbstractBuildingBlock {
+public class Building_Wall : AbstractBaseBuilding {
 
 	// Use this for initialization
 	void Awake () {
