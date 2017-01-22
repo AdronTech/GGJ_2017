@@ -16,11 +16,6 @@ public class titleInput : MonoBehaviour
         sceneStartTime = Time.time;
     }
 
-    void Awake()
-    {
-        sceneStartTime = Time.time;
-    }
-
     // Update is called once per frame
     void Update()
     {
