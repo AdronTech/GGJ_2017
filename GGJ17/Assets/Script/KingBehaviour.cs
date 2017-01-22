@@ -8,8 +8,6 @@ public class KingBehaviour : MonoBehaviour {
     public GameObject soldierPre;
     public int size;
 
-    private List<Transform> possibleTargets;
-
     private List<MyPhysics> army;
 
     private MyPhysics my;
@@ -24,7 +22,6 @@ public class KingBehaviour : MonoBehaviour {
         mySeek = GetComponent<SeekBehaviour>();
 
         army = new List<MyPhysics>();
-        possibleTargets = new List<Transform>();
 
         state = KingState.Seeking;
 
@@ -78,6 +75,8 @@ public class KingBehaviour : MonoBehaviour {
         {
             yield return new WaitUntil(() => state == KingState.Seeking);
 
+            List<Transform> possibleTargets = new List<Transform>();
+
             foreach (AbstractBaseBuilding a in FindObjectsOfType<AbstractBaseBuilding>())
             {
                 if (a.neighbors[AbstractBuildingBlock.down] && a.neighbors[AbstractBuildingBlock.down].tag == "Ground")
@@ -92,7 +91,6 @@ public class KingBehaviour : MonoBehaviour {
                     else
                     {
                         Debug.DrawLine(my.pos, a.transform.position, Color.blue);
-                        if (possibleTargets.Contains(a.transform)) possibleTargets.Remove(a.transform);
                     }
                 }
             }
@@ -141,7 +139,7 @@ public class KingBehaviour : MonoBehaviour {
                 case KingState.Seeking:
                     if (!mySeek.target) break;
 
-                    if (Mathf.Abs(my.pos.x - mySeek.target.position.x) <= attackRange || Mathf.Abs(my.pos.z - mySeek.target.position.z) <= attackRange)
+                    if (Mathf.Abs(my.pos.x - mySeek.target.position.x) <= attackRange && Mathf.Abs(my.pos.z - mySeek.target.position.z) <= attackRange)
                     { 
                         state = KingState.Attack;
                         mySeek.stop();
@@ -158,14 +156,14 @@ public class KingBehaviour : MonoBehaviour {
                 case KingState.Attack:
                     if (!mySeek.target)
                     {
-                        state = KingState.Seeking;
-                        mySeek.start();
-
                         foreach (MyPhysics soldier in army)
                         {
                             AttackBehaviour ah = soldier.GetComponent<AttackBehaviour>();
-                            if (ah) ah.startAttack(mySeek.target);
+                            if (ah) ah.stopAttack();
                         }
+                        mySeek.start();
+                        state = KingState.Seeking;
+                        Debug.Log("Destroyed");
                     }
 
                     break;

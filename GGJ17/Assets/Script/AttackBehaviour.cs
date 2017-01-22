@@ -24,13 +24,13 @@ public class AttackBehaviour : MonoBehaviour {
     public void startAttack(Transform target)
     {
         this.target = target;
+        lr.enabled = true;
     }
 
     void Update()
-    {
-        lr.enabled = target != null;
+    { 
 
-        if (lr.enabled)
+        if (lr.enabled && target)
         {
             Vector3[] positions = new Vector3[2];
 
@@ -43,6 +43,7 @@ public class AttackBehaviour : MonoBehaviour {
 
     public void stopAttack()
     {
+        lr.enabled = false;
         target = null;
     }
 
