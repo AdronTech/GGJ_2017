@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class WorldScript : MonoBehaviour {
 
-    public Vector2 size = new Vector2(64,64);
+    #region Instantiation
     public GameObject groundSoil, groundResource;
-    public AbstractBuildingBlock[,] blocks;
-
     public GameObject flagPrefab;
-    [HideInInspector]
-    public AbstractBuildingBlock flag;
+    #endregion
+    [Range(0f, 1f)]
+    public float resourceAbundance;
+    public Vector2 size = new Vector2(64,64);
+
+    public AbstractBuildingBlock[,] blocks;
 
     void Awake()
     {
@@ -21,7 +23,7 @@ public class WorldScript : MonoBehaviour {
     {
         Vector3 flagSpawn = blocks[(int)size.x / 2, (int)size.y / 2].transform.position;
         flagSpawn.y = 1;
-        flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
+        AbstractBuildingBlock flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
         flag.transform.position = flagSpawn;
         StartCoroutine(LateStart());
     }
@@ -49,7 +51,15 @@ public class WorldScript : MonoBehaviour {
         {
             for (int y = 0; y < size.y; y++)
             {
-                blocks[x,y] = Instantiate(groundSoil, transform).GetComponent<AbstractBuildingBlock>();
+                float rng = Random.value;
+                if (rng <= resourceAbundance)
+                {
+                    blocks[x, y] = Instantiate(groundResource, transform).GetComponent<AbstractBuildingBlock>();
+                }
+                else
+                {
+                    blocks[x, y] = Instantiate(groundSoil, transform).GetComponent<AbstractBuildingBlock>();
+                }
                 blocks[x, y].transform.position = Vector3.forward * x + Vector3.right * y;
             }
         }

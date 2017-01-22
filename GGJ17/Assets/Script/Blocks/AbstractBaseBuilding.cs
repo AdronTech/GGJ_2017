@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class AbstractBaseBuilding : AbstractBuildingBlock {
 
-    float hp = 10;
+    [SerializeField]
+    private float hp = 10;
     public float HP
     {
         set
