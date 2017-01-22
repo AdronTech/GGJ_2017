@@ -146,8 +146,11 @@ public class KingBehaviour : MonoBehaviour {
 
                         foreach(MyPhysics soldier in army)
                         {
-                            AttackBehaviour ah = soldier.GetComponent<AttackBehaviour>();
-                            if (ah) ah.startAttack(mySeek.target);
+                            if (soldier)
+                            {
+                                AttackBehaviour ah = soldier.GetComponent<AttackBehaviour>();
+                                if (ah) ah.startAttack(mySeek.target);
+                            }
                         }
 
                     }
