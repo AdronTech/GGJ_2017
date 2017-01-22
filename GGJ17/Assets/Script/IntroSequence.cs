@@ -8,6 +8,8 @@ public class IntroSequence : MonoBehaviour
 
     public GameObject dialog;
     private Dialog d;
+    public string nextSceneName;
+
     // Use this for initialization
     void Start()
     {
@@ -18,7 +20,10 @@ public class IntroSequence : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.anyKeyDown)
+        {
+            SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
+        }
     }
 
     public IEnumerator PlayIntro()
@@ -81,6 +86,6 @@ public class IntroSequence : MonoBehaviour
 
         yield return StartCoroutine(d.Talk());
 
-        SceneManager.LoadScene(2, LoadSceneMode.Single);
+        SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
     }
 }
