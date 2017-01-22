@@ -24,12 +24,15 @@ public class DialogBox : MonoBehaviour
     {
         int i = 0;
         textbox.text = "";
-
+        AudioSource a = GetComponent<AudioSource>();
+        a.loop = true;
+        a.Play();
         while(i < text.Length)
         {
             textbox.text += text[i];
             ++i;
             yield return new WaitForSeconds(.07f);
         }
+        a.Stop();
     }
 }
