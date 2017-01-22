@@ -32,8 +32,8 @@ public class IsoCamera : MonoBehaviour
         transform.Translate(translation, Space.World);
         focusPoint += translation;
         #endregion
-        // poll the mouse
         #region rotate
+        // poll the mouse
         if (Input.GetMouseButton(1))
         {
             Vector2 rotation = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
