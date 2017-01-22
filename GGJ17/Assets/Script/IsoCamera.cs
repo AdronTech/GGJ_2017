@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IsoCamera : MonoBehaviour {
 
-    public float panSpeed = 10, rotateSpeed = 10, camFocusHeight = 0;
+    public float panSpeed = 10, rotateSpeed = 50, camFocusHeight = 0;
     private Vector3 focusPoint, mousePosition;
 
 	// Use this for initialization
