@@ -20,5 +20,6 @@ public abstract class AbstractBaseBuilding : AbstractBuildingBlock {
     public void DestroyBuilding()
     {
 
+        Destroy(gameObject);
     }
 }
