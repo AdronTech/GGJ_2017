@@ -2,16 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ResourceManager : MonoBehaviour
 {
-    public float ousaResource, ousaDelta, timeWait;
+    public float ousiaResource, ousiaDelta, timeWait;
+    public Text resourceText;
 
     // Use this for initialization
     void Start()
     {
-        ousaResource = 0f;
-        ousaDelta = 0f;
+        ousiaResource = 0f;
+        ousiaDelta = 0f;
         timeWait = 0f;
         
     }
@@ -30,16 +32,17 @@ public class ResourceManager : MonoBehaviour
 
     private void updateResources()
     {
-        ousaResource += ousaDelta;
+        ousiaResource += ousiaDelta;
+        resourceText.text = ousiaResource.ToString();
     }
 
     public void RegisterResources(float resource_value)
     {
-        ousaDelta += resource_value;
+        ousiaDelta += resource_value;
     }
 
     public void DeregisterResources(float resource_value)
     {
-        ousaDelta -= resource_value;
+        ousiaDelta -= resource_value;
     }
 }

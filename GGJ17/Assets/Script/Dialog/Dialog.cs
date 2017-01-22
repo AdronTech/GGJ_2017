@@ -1,17 +1,25 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Dialog : MonoBehaviour
 {
-    public List<string> speeches;
-    public GameObject dialogLeft, dialogRight;
+    public List<GameObject> dialogBoxes;
+
+    public struct DialogElement
+    {
+        public GameObject dialogBox;
+        public string text;
+    }
+
+    public List<DialogElement> speeches;
 
     // Use this for initialization
     void Start()
     {
-        IEnumerator t = Talk();
-        StartCoroutine(t);
+        //IEnumerator t = Talk();
+        //StartCoroutine(t);
     }
 
     // Update is called once per frame
@@ -23,20 +31,15 @@ public class Dialog : MonoBehaviour
     {
         for(int i = 0; i < speeches.Count; ++i)
         {
-            GameObject box = null;
-            if(i%2 == 0)
-            {
-                box = Instantiate(dialogLeft);
-            }
-            else
-            {
-                box = Instantiate(dialogRight);
-            }
-
+            GameObject box = Instantiate(speeches[i].dialogBox);
             Canvas canvas = FindObjectOfType<Canvas>();
 
-            box.transform.parent = canvas.transform;
+            if(canvas == null)
+            {
+                throw new System.Exception("No Canvas in the Scene");
+            }
 
+            box.transform.parent = canvas.transform;
             RectTransform rect = box.GetComponent<RectTransform>();
 
             rect.anchoredPosition = new Vector3(rect.rect.width / 2 + 17,
@@ -46,7 +49,9 @@ public class Dialog : MonoBehaviour
                 new Vector3(rect.anchoredPosition.x, 
                 -rect.rect.height / 2 - (i * rect.rect.height) - 14)));
 
-            yield return StartCoroutine(box.GetComponent<DialogBox>().Speak(speeches[i]));
+            DialogBox d = box.GetComponent<DialogBox>();
+            d.text = speeches[i].text;
+            yield return StartCoroutine(d.Speak());
         }
     }
 
@@ -57,6 +62,11 @@ public class Dialog : MonoBehaviour
             rect.anchoredPosition += Vector2.up * 1000 * Time.deltaTime;
             yield return null;
         }
+    }
+
+    internal void Clear()
+    {
+        speeches.Clear();
     }
 
 

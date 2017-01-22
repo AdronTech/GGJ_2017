@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class DialogBox : MonoBehaviour
 {
     private Text textbox;
+    public string text;
 
     // Use this for initialization
     void Start()
@@ -19,7 +20,7 @@ public class DialogBox : MonoBehaviour
 
     }
 
-    public IEnumerator Speak(string text)
+    public IEnumerator Speak()
     {
         int i = 0;
         textbox.text = "";
