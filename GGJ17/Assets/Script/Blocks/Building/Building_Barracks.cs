@@ -8,7 +8,7 @@ public class Building_Barracks : AbstractBaseBuilding {
     public float sonarPulseIntervall = 2f;
     public int ticksToLeaveAlert = 10;
     public float alertResourceDrain = -0.1f;
-    public float atackIntervall = 0.5f;
+    public float attackAimDuration = 1f, attackFlareDuration = 0.1f;
 
     private LineRenderer ousiaRay;
     private Collider[] enemiesSpotted = new Collider[0];
@@ -19,13 +19,14 @@ public class Building_Barracks : AbstractBaseBuilding {
         set
         {
             isAlerted = value;
+            ResourceManager m = FindObjectOfType<ResourceManager>();
             if (value)
             {
-                FindObjectOfType<ResourceManager>().RegisterResources(alertResourceDrain);
+                if(m)m.RegisterResources(alertResourceDrain);
             }
             else
             {
-                FindObjectOfType<ResourceManager>().DeregisterResources(alertResourceDrain);
+                if(m)m.DeregisterResources(alertResourceDrain);
             }
         }
     }
@@ -58,32 +59,36 @@ public class Building_Barracks : AbstractBaseBuilding {
     {
         foreach(Collider enemy in enemiesSpotted)
         {
-            Vector3 dir = enemy.transform.position - transform.position;
-            float distance = dir.magnitude;
-            dir.Normalize();
-            if (Physics.Raycast(transform.position, dir, distance))
-            { continue; }
-            else
+            if (EvaluateTarget(enemy))
             {
-                ousiaRay.SetPosition(1, enemy.transform.position);
                 return enemy;
             }
-
         }
         return null;
     }
 
+    public bool EvaluateTarget(Collider enemy)
+    {
+        Vector3 dir = enemy.transform.position - transform.position;
+        float distance = dir.magnitude;
+        dir.Normalize();
+        return !Physics.Raycast(transform.position, dir, distance, LayerMask.NameToLayer("Building"));
+    }
+
+    public int clearTicks = 0;
     public IEnumerator Sonar()
     {
-        int clearTicks = 0;
         while(true)
         {
             Collider[] cc;
             if(AlertCheck(out cc))
             {
-                if(!isAlerted) StartCoroutine(Engaging());
+                if (!isAlerted)
+                {
+                    StartCoroutine(Engaging());
+                    IsAlerted = true;
+                }
                 clearTicks = 0;
-                IsAlerted = true;
             }
             else if(++clearTicks == ticksToLeaveAlert)
             {
@@ -95,10 +100,21 @@ public class Building_Barracks : AbstractBaseBuilding {
 
     public IEnumerator Engaging()
     {
+        Debug.Log("Engaged!");
         for(Collider target = AquireTarget(); target; target = AquireTarget())
         {
-
-            yield return null;
+            Debug.Log("Aiming!");
+            Debug.DrawLine(transform.position, target.transform.position, Color.cyan);
+            yield return new WaitForSeconds(attackAimDuration);
+            if (EvaluateTarget(target))
+            {
+                ousiaRay.SetPosition(1, target.transform.position);
+                ousiaRay.enabled = true;
+                Destroy(target.gameObject);
+                yield return new WaitForSeconds(attackFlareDuration);
+                ousiaRay.enabled = false;
+            }
         }
+        Debug.Log("No Targets!");
     }
 }

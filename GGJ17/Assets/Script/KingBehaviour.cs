@@ -86,12 +86,12 @@ public class KingBehaviour : MonoBehaviour {
 
                     if (!Physics.Raycast(my.pos, dist.normalized, dist.magnitude - 1))
                     {
-                        //Debug.DrawLine(my.pos, a.transform.position, Color.red);
+                        Debug.DrawLine(my.pos, a.transform.position, Color.red);
                         possibleTargets.Add(a.transform);
                     }
                     else
                     {
-                        //Debug.DrawLine(my.pos, a.transform.position, Color.blue);
+                        Debug.DrawLine(my.pos, a.transform.position, Color.blue);
                         if (possibleTargets.Contains(a.transform)) possibleTargets.Remove(a.transform);
                     }
                 }
@@ -112,9 +112,8 @@ public class KingBehaviour : MonoBehaviour {
                     bestTarget = possible;
             }
 
-            Debug.Log(mySeek.target = bestTarget);
-
-            if (!mySeek.target ||
+            if (!mySeek.target || 
+                !possibleTargets.Contains(mySeek.target) ||
                 getPriority(bestTarget) > getPriority(mySeek.target) ||
                 (getPriority(bestTarget) == getPriority(mySeek.target) && Vector3.Distance(my.pos, bestTarget.position) <= Vector3.Distance(my.pos, mySeek.target.position)))
                 mySeek.target = bestTarget;
@@ -146,10 +145,29 @@ public class KingBehaviour : MonoBehaviour {
                     { 
                         state = KingState.Attack;
                         mySeek.stop();
+
+                        foreach(MyPhysics soldier in army)
+                        {
+                            AttackBehaviour ah = soldier.GetComponent<AttackBehaviour>();
+                            if (ah) ah.startAttack(mySeek.target);
+                        }
+
                     }
 
                     break;
                 case KingState.Attack:
+                    if (!mySeek.target)
+                    {
+                        state = KingState.Seeking;
+                        mySeek.start();
+
+                        foreach (MyPhysics soldier in army)
+                        {
+                            AttackBehaviour ah = soldier.GetComponent<AttackBehaviour>();
+                            if (ah) ah.startAttack(mySeek.target);
+                        }
+                    }
+
                     break;
             }
 

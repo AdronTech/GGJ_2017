@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Building_Flag : AbstractBaseBuilding {
+
+    public string nextSceneName;
 
 	// Use this for initialization
 	void Awake () {
@@ -18,5 +21,6 @@ public class Building_Flag : AbstractBaseBuilding {
     {
         // Todo GameOver
         Destroy(gameObject);
+        SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
     }
 }
