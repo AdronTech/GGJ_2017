@@ -16,6 +16,7 @@ public class GodView : MonoBehaviour {
         if(prefab.tag == "DESTRUCTION")
         {
             w.HideNodes();
+            constructionPrefab = null;
             isDestruct = true;
         }
         else if (a is Building_Wall)
@@ -44,7 +45,7 @@ public class GodView : MonoBehaviour {
     {
         while (true)
         {
-            yield return new WaitUntil(() => constructionPrefab && Input.GetMouseButtonDown(0));
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
             {
                 GameObject construction = constructionPrefab;
                 RaycastHit hit;
