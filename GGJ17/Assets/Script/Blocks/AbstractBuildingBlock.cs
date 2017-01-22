@@ -70,51 +70,46 @@ public abstract class AbstractBuildingBlock : MonoBehaviour {
     }
 
     #region ActivateNodes
-    public bool isNodesActive = true;
+    public bool BlockOccupied
+    {
+        get
+        {
+            return neighbors[up];
+        }
+    }
+
     public void ShowNodes(bool topN, bool sidesN)
     {
-        isNodesActive = true;
-        if (topN && neighbors[up] == null)
+        if (topN && !neighbors[up] && nodes[up])
         {
             nodes[up].Show();
         }
         if (sidesN)
         {
-            if (neighbors[left] == null)
+            if (!neighbors[left] && nodes[left])
             {
                 nodes[left].Show();
             }
-            if (neighbors[right] == null)
+            if (!neighbors[right] && nodes[right])
             {
                 nodes[right].Show();
             }
-            if (neighbors[front] == null)
+            if (!neighbors[front] && nodes[front])
             {
                 nodes[front].Show();
             }
-            if (neighbors[back] == null)
+            if (!neighbors[back] && nodes[back])
             {
                 nodes[back].Show();
             }
-        }
-        if(neighbors[down] && neighbors[down].tag == "Ground")
-        {
-            // update ground beneath me
-            neighbors[down].isNodesActive = true;
         }
     }
 
     public void HideNodes()
     {
-        isNodesActive = false;
         foreach(BuildNode n in nodes)
         {
             if(n) n.Hide();
-        }
-        // update ground beneath me
-        if (neighbors[down] && neighbors[down].tag == "Ground")
-        {
-            neighbors[down].isNodesActive = false;
         }
     }
     #endregion

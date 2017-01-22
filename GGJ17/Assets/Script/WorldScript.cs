@@ -23,6 +23,12 @@ public class WorldScript : MonoBehaviour {
         flagSpawn.y = 1;
         flag = Instantiate(flagPrefab).GetComponent<AbstractBuildingBlock>();
         flag.transform.position = flagSpawn;
+        StartCoroutine(LateStart());
+    }
+
+    IEnumerator LateStart()
+    {
+        yield return null;
         HideNodes();
     }
 
@@ -52,6 +58,7 @@ public class WorldScript : MonoBehaviour {
     public void ShowNodes(bool topN, bool sidesN)
     {
         HideNodes();
+
         // activate all building nodes needed
         foreach(AbstractBuildingBlock a in FindObjectsOfType<AbstractBuildingBlock>())
         {
@@ -63,43 +70,27 @@ public class WorldScript : MonoBehaviour {
 
         //sweep the floor
         for (int x = 0; x < size.x; x++)
+        {
             for (int y = 0; y < size.y; y++)
             {
-                if (blocks[x, y].isNodesActive)
+                if (blocks[x, y].BlockOccupied)
                 {
-                    if (x - 1 >= 0) blocks[x - 1, y].ShowNodes(true, false);
-                    if (y - 1 >= 0) blocks[x, y - 1].ShowNodes(true, false);
-                }
-                else
-                {
-                    if(x > 0)
-                        if(blocks[x - 1, y].isNodesActive)
-                        {
-                            blocks[x, y].ShowNodes(true, false);
-                        }
-                    if(y > 0)
-                        if(blocks[x, y - 1].isNodesActive)
-                        {
-                            blocks[x, y].ShowNodes(true, false);
-                        }
+                    blocks[x, y].ShowNodes(true, false);
+                    if (x > 0) blocks[x - 1, y].ShowNodes(true, false);
+                    if (x < size.x - 1) blocks[x + 1, y].ShowNodes(true, false);
+                    if (y > 0) blocks[x, y - 1].ShowNodes(true, false);
+                    if (y < size.y - 1) blocks[x, y + 1].ShowNodes(true, false);
                 }
             }
+        }
+            
     }
 
     public void HideNodes()
     {
         foreach (AbstractBuildingBlock a in FindObjectsOfType<AbstractBuildingBlock>())
         {
-            if (a.tag == "Building")
-            {
-                a.HideNodes();
-            }
+            a.HideNodes();
         }
-
-        for (int x = 0; x < size.x; x++)
-            for (int y = 0; y < size.y; y++)
-            {
-                blocks[x, y].HideNodes();
-            }
     }
 }

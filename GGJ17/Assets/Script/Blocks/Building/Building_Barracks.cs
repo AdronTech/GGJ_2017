@@ -5,7 +5,7 @@ using UnityEngine;
 public class Building_Barracks : AbstractBuildingBlock {
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         BuildingBlockInit bbi = new BuildingBlockInit();
         bbi.up = bbi.down = true;
         bbi.sides = false;

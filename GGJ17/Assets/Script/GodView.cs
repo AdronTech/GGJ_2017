@@ -31,28 +31,39 @@ public class GodView : MonoBehaviour {
 	void Start () {
         myCam = GetComponent<Camera>();
         w = FindObjectOfType<WorldScript>();
+        StartCoroutine(MouseLeftClick());
+        StartCoroutine(MouseRightClick());
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator MouseLeftClick()
     {
-        if (Input.GetMouseButtonUp(0))
+        while (true)
         {
-            Ray r = myCam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(r, out hit))
+            yield return new WaitUntil(() => constructionPrefab && Input.GetMouseButtonDown(0));
             {
-                BuildNode node = hit.collider.GetComponent<BuildNode>();
-                if (node)
+                GameObject construction = constructionPrefab;
+                RaycastHit hit;
+                if (Physics.Raycast(myCam.ScreenPointToRay(Input.mousePosition), out hit))
                 {
-                    Instantiate(constructionPrefab, node.GetSpawnPosition(), Quaternion.identity);
+                    BuildNode node = hit.collider.GetComponent<BuildNode>();
+                    if (node)
+                    {
+                        Instantiate(construction, node.GetSpawnPosition(), Quaternion.identity);
+                    }
+                    yield return new WaitForFixedUpdate();
+                    enableConstructionMode(constructionPrefab);
                 }
             }
         }
-        if (Input.GetMouseButtonDown(1) && constructionPrefab != null)
+    }
+
+    IEnumerator MouseRightClick()
+    {
+        while (true)
         {
-            w.HideNodes();
+            yield return new WaitUntil(() => Input.GetMouseButtonDown(1));
             constructionPrefab = null;
+            w.HideNodes();
         }
     }
 }
