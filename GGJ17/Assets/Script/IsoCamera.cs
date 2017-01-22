@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class IsoCamera : MonoBehaviour {
-
+    
     public float panSpeed = 10, rotateSpeed = 100, zoomSpeed = 5;
     private const float camFocusHeight = 0;
     private Vector3 focusPoint, mousePosition;
